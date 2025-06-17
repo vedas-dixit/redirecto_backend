@@ -1,10 +1,10 @@
 from fastapi import FastAPI, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-from ..database.db import get_session
-from ..models.models import User
-from ..api import user_urls, redirect, delete_url, verify_password
-from ..api.dashboard import dashboard_overview
+from database.db import get_session
+from models.models import User
+from api import user_urls, redirect,delete_url, verify_password
+from api.dashboard import dashboard_overview
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
