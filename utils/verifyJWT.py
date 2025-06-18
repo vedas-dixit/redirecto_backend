@@ -2,7 +2,6 @@ from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from fastapi import APIRouter, HTTPException, Depends
 import os
 import jwt
-from jwt import PyJWTError
 from typing import Optional
 
 SUPABASE_JWT_SECRET = os.getenv("SUPABASE_JWT_SECRET")
@@ -50,7 +49,7 @@ async def verify_supabase_token(
     except jwt.InvalidSignatureError:
         print("JWT invalid signature")
         return None
-    except PyJWTError as e:
+    except jwt.InvalidTokenError as e:  # This is the correct exception for PyJWT 2.x
         print(f"JWT verification failed: {e}")
         return None
     except Exception as e:

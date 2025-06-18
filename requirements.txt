@@ -9,3 +9,4 @@ pytest
 python-jose[cryptography]
 httpx
 bcrypt
+PyJWT>=2.0.0
