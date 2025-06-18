@@ -23,5 +23,6 @@ async def delete_url_and_clicks(session: AsyncSession | None, url_id: str) -> No
         await _delete_within_session(session)
     else:
         from database.db import async_session_maker
+
         async with async_session_maker() as local_session:
             await _delete_within_session(local_session)

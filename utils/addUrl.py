@@ -8,6 +8,7 @@ from utils.generateUrl import generate_short_code
 from typing import Optional
 from utils.hash_password import hash_password
 
+
 async def add_url_for_user(
     *,
     session: AsyncSession,
@@ -45,7 +46,9 @@ async def add_url_for_user(
         # Step 3: Generate unique short code based on index
         short_code = generate_short_code(user_id, len(user_urls) + 1)
         expires_at = (
-            datetime.strptime(expires_at, "%Y-%m-%d") if isinstance(expires_at, str) else None
+            datetime.strptime(expires_at, "%Y-%m-%d")
+            if isinstance(expires_at, str)
+            else None
         )
 
         # Step 4: Create the new URL object
@@ -60,7 +63,7 @@ async def add_url_for_user(
             short_code=short_code,
             destination=long_url,
             is_protected=is_protected,
-            password_hash= password_hash,
+            password_hash=password_hash,
             expires_at=expires_at,
             click_limit=click_limit,
             created_at=now_utc,

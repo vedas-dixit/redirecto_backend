@@ -28,7 +28,9 @@ async def handle_redirect(
         raise HTTPException(status_code=404, detail="Short URL not found.")
 
     # Check for expiry
-    if url.expires_at and url.expires_at.replace(tzinfo=timezone.utc) <= datetime.now(timezone.utc):
+    if url.expires_at and url.expires_at.replace(tzinfo=timezone.utc) <= datetime.now(
+        timezone.utc
+    ):
         background_tasks.add_task(delete_url_and_clicks, None, str(url.id))
         raise HTTPException(status_code=410, detail="URL expired.")
 
@@ -36,11 +38,13 @@ async def handle_redirect(
     if url.click_limit == 0:
         background_tasks.add_task(delete_url_and_clicks, None, str(url.id))
         raise HTTPException(status_code=404, detail="Click limit reached.")
-    
+
     frontend_base_url = "http://localhost:3000"
-    
+
     if url.is_protected:
-        return RedirectResponse(url=f"{frontend_base_url}/secure/{short_code}", status_code=307)
+        return RedirectResponse(
+            url=f"{frontend_base_url}/secure/{short_code}", status_code=307
+        )
 
     # Allow redirect → record click & deduct click count in background
     background_tasks.add_task(record_click, url.id, request)
