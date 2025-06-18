@@ -79,3 +79,14 @@ class VerifyPasswordRequest(BaseModel):
 
 class VerifyPasswordResponse(BaseModel):
     destination: str
+
+class UpdateUserRequest(BaseModel):
+    user_id: str
+    name: Optional[str] = None
+    email: Optional[str] = None
+
+class UpdateUserResponse(BaseModel):
+    user_id: str
+    name: Optional[str]
+    email: Optional[str]
+    message: str
