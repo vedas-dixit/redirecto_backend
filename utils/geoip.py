@@ -8,13 +8,19 @@ def country_code_to_flag_emoji(code: str) -> str:
     """
     return "".join(chr(127397 + ord(c)) for c in code.upper())
 
+def get_client_ip(request: Request) -> str:
+    """
+    Extract the real client IP address from the request.
+    """
+    x_forwarded_for = request.headers.get("x-forwarded-for")
+    if x_forwarded_for:
+        # This may contain multiple IPs: "client, proxy1, proxy2"
+        return x_forwarded_for.split(",")[0].strip()
+    return request.client.host  # fallback
 
 async def get_country_and_flag(request: Request) -> tuple[str, str]:
-    """
-    Fetch user's country name and flag using ipapi.co
-    """
     try:
-        client_ip = request.client.host
+        client_ip = get_client_ip(request)
         async with httpx.AsyncClient() as client:
             response = await client.get(f"https://ipapi.co/{client_ip}/json/")
             if response.status_code == 200:
