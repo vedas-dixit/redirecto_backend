@@ -1,7 +1,7 @@
-from pydantic import BaseModel
+from pydantic import BaseModel,EmailStr
 from datetime import datetime
 from typing import Optional
-
+from uuid import UUID
 
 class URLData(BaseModel):
     id: str
@@ -83,10 +83,10 @@ class VerifyPasswordResponse(BaseModel):
 class UpdateUserRequest(BaseModel):
     user_id: str
     name: Optional[str] = None
-    email: Optional[str] = None
+    email: Optional[EmailStr] = None
 
 class UpdateUserResponse(BaseModel):
-    user_id: str
+    user_id: UUID
     name: Optional[str]
-    email: Optional[str]
+    email: Optional[EmailStr]
     message: str
