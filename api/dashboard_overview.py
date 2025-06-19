@@ -11,9 +11,12 @@ from schemas.dashboard import SummaryData, RecentClick, URLData
 from utils.dashboard import get_ttl_and_status, format_time_diff
 from utils.colors import COLOR_MAP
 from typing import List, Optional
+from dotenv import load_dotenv
+import os
 
 router = APIRouter()
-
+load_dotenv()
+BASE_URL = os.getenv("BASE_URL")
 
 @router.get("/dashboard/overview")
 async def get_dashboard_overview(
@@ -56,7 +59,7 @@ async def get_dashboard_overview(
         url_list: List[URLData] = [
             URLData(
                 id=str(u.id),
-                shortUrl=f"redirecto/{u.short_code}",
+                shortUrl=f"{BASE_URL}/{u.short_code}",
                 destination=u.destination,
                 clicks=len(u.clicks),
                 ttl=get_ttl_and_status(u.expires_at)[0],
@@ -104,7 +107,7 @@ async def get_dashboard_overview(
             recent_activity.append(
                 {
                     "id": str(click.id),
-                    "shortUrl": f"redirecto/{short_code}",
+                    "shortUrl": f"{BASE_URL}/{short_code}",
                     "country": click.country or "Unknown",
                     "flag": click.flag or "🏳️",
                     "time": format_time_diff(click.timestamp),
