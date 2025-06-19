@@ -8,9 +8,12 @@ from utils.geoip import get_country_and_flag
 from utils.delete_url_and_clicks import delete_url_and_clicks
 from models.models import URL, Click
 from database.db import async_session_maker, get_session
+from dotenv import load_dotenv
+import os
 
 router = APIRouter()
-
+load_dotenv()
+WEB_BASE_URL = os.getenv("WEB_BASE_URL")
 
 @router.get("/{short_code}")
 async def handle_redirect(
@@ -39,11 +42,9 @@ async def handle_redirect(
         background_tasks.add_task(delete_url_and_clicks, None, str(url.id))
         raise HTTPException(status_code=404, detail="Click limit reached.")
 
-    frontend_base_url = "http://localhost:3000"
-
     if url.is_protected:
         return RedirectResponse(
-            url=f"{frontend_base_url}/secure/{short_code}", status_code=307
+            url=f"{WEB_BASE_URL}/secure/{short_code}", status_code=307
         )
 
     # Allow redirect → record click & deduct click count in background
