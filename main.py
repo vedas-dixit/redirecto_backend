@@ -4,7 +4,7 @@ from sqlalchemy.future import select
 from sqlalchemy import text
 from database.db import get_session, check_database_connection
 from models.models import User
-from api import user_urls, redirect, delete_url, verify_password, updateuser
+from api import user_urls, redirect, delete_url, verify_password, updateuser, create_user
 from api import dashboard_overview
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
@@ -42,6 +42,7 @@ app.include_router(redirect.router, tags=["URL REDIRECTION"])
 app.include_router(dashboard_overview.router, tags=["DASHBOARD SUMMARY"])
 app.include_router(verify_password.router, tags=["PASSCODE VERIFICATION"])
 app.include_router(updateuser.router, tags=["UPDATE USER DATA"])
+app.include_router(create_user.router, tags=["CREATE USER"])
 app.include_router(delete_url.router, tags=["DELETE URL"])
 
 # Add CORS middleware
