@@ -1,7 +1,8 @@
-from pydantic import BaseModel,EmailStr
+from pydantic import BaseModel, EmailStr
 from datetime import datetime
 from typing import Optional
 from uuid import UUID
+
 
 class URLData(BaseModel):
     id: str
@@ -80,10 +81,12 @@ class VerifyPasswordRequest(BaseModel):
 class VerifyPasswordResponse(BaseModel):
     destination: str
 
+
 class UpdateUserRequest(BaseModel):
     user_id: str
     name: Optional[str] = None
     email: Optional[EmailStr] = None
+
 
 class UpdateUserResponse(BaseModel):
     user_id: UUID

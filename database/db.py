@@ -16,27 +16,26 @@ DATABASE_URL = os.getenv("DATABASE_URL")
 engine = create_async_engine(
     DATABASE_URL,
     echo=False,  # Set to True for debugging SQL queries
-    pool_pre_ping=True,          # Verify connections before use
-    pool_recycle=300,            # Recycle connections every 5 minutes
-    pool_size=3,                 # Smaller pool for Railway
-    max_overflow=5,              # Additional connections if needed
-    pool_timeout=30,             # Connection timeout in seconds
+    pool_pre_ping=True,  # Verify connections before use
+    pool_recycle=300,  # Recycle connections every 5 minutes
+    pool_size=3,  # Smaller pool for Railway
+    max_overflow=5,  # Additional connections if needed
+    pool_timeout=30,  # Connection timeout in seconds
     connect_args={
-        "ssl": "require",        # Force SSL for production
+        "ssl": "require",  # Force SSL for production
         "server_settings": {
             "application_name": "railway_fastapi_app",
-        }
-    }
+        },
+    },
 )
 
 
 async_session_maker = sessionmaker(
-    bind=engine, 
-    class_=AsyncSession, 
-    expire_on_commit=False
+    bind=engine, class_=AsyncSession, expire_on_commit=False
 )
 
 Base = declarative_base()
+
 
 async def get_session():
     async with async_session_maker() as session:
@@ -48,6 +47,7 @@ async def get_session():
             raise
         finally:
             await session.close()
+
 
 # Health check function for database
 async def check_database_connection():

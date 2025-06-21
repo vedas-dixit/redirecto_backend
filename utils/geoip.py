@@ -8,6 +8,7 @@ def country_code_to_flag_emoji(code: str) -> str:
     """
     return "".join(chr(127397 + ord(c)) for c in code.upper())
 
+
 def get_client_ip(request: Request) -> str:
     """
     Extract the real client IP address from the request.
@@ -17,6 +18,7 @@ def get_client_ip(request: Request) -> str:
         # This may contain multiple IPs: "client, proxy1, proxy2"
         return x_forwarded_for.split(",")[0].strip()
     return request.client.host  # fallback
+
 
 async def get_country_and_flag(request: Request) -> tuple[str, str]:
     try:
