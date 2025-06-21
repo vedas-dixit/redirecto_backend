@@ -8,6 +8,7 @@ from sqlalchemy.exc import SQLAlchemyError
 
 router = APIRouter()
 
+
 @router.patch("/user/update", response_model=UpdateUserResponse)
 async def update_user_details(
     request: UpdateUserRequest,
@@ -35,7 +36,7 @@ async def update_user_details(
             user_id=user.id,
             name=user.name,
             email=user.email,
-            message="User details updated successfully"
+            message="User details updated successfully",
         )
 
     except SQLAlchemyError as e:

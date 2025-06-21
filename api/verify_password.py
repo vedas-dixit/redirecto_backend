@@ -13,6 +13,7 @@ from utils.delete_url_and_clicks import delete_url_and_clicks
 
 router = APIRouter()
 
+
 @router.post("/verify-password")
 async def verify_password(
     payload: VerifyPasswordRequest,
@@ -38,7 +39,9 @@ async def verify_password(
         raise HTTPException(status_code=401, detail="Incorrect password.")
 
     # Check expiry
-    if url.expires_at and url.expires_at.replace(tzinfo=timezone.utc) <= datetime.now(timezone.utc):
+    if url.expires_at and url.expires_at.replace(tzinfo=timezone.utc) <= datetime.now(
+        timezone.utc
+    ):
         background_tasks.add_task(delete_url_and_clicks, None, str(url.id))
         raise HTTPException(status_code=410, detail="URL expired.")
 
@@ -70,6 +73,7 @@ async def record_click(url_id: str, request: Request):
         )
         session.add(click)
         await session.commit()
+
 
 async def deduct_click_limit(url_id: str):
     async with async_session_maker() as session:

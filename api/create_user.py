@@ -104,7 +104,11 @@ async def create_user(
             name=db_user.name,
             avatar_url=db_user.avatar_url,
             provider=db_user.provider,
-            message="User created successfully" if not hasattr(db_user, '_was_existing') else "User already exists"
+            message=(
+                "User created successfully"
+                if not hasattr(db_user, "_was_existing")
+                else "User already exists"
+            ),
         )
 
     except HTTPException:
