@@ -51,7 +51,6 @@ async def handle_redirect(
             ttl = int((url.expires_at - datetime.now(timezone.utc)).total_seconds())
             await redis_client.expire(redis_key, ttl)
     else:
-        print("REDIS HITTTTTTT -> >>>>>>>>>")
         url = type("URLObj", (), {})()
         url.id = url_data["id"]
         url.destination = url_data["destination"]
@@ -82,7 +81,7 @@ async def handle_redirect(
     # Protected
     if url.is_protected:
         return RedirectResponse(
-            url=f"{WEB_BASE_URL}/secure/{short_code}", status_code=307
+            url=f"http://localhost:3000/secure/{short_code}", status_code=307
         )
 
     background_tasks.add_task(record_click, url.id, request)
@@ -126,7 +125,6 @@ async def deduct_click_limit_and_update_cache(url_id: str, short_code: str):
         else:
             await session.commit()
             # Update Redis cache
-            print("REDIS ::: UPDATE")
             await redis_client.hset(
                 f"url:{short_code}", mapping={"click_limit": url.click_limit}
             )
