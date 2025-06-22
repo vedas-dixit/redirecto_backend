@@ -81,7 +81,7 @@ async def handle_redirect(
     # Protected
     if url.is_protected:
         return RedirectResponse(
-            url=f"http://localhost:3000/secure/{short_code}", status_code=307
+            url=f"{WEB_BASE_URL}/{short_code}", status_code=307
         )
 
     background_tasks.add_task(record_click, url.id, request)
