@@ -12,3 +12,4 @@ bcrypt
 PyJWT>=2.0.0
 pydantic[email]
 redis[async]
+python-dateutil

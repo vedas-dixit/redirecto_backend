@@ -7,6 +7,7 @@ from datetime import datetime, timedelta, timezone
 from utils.generateUrl import generate_short_code
 from typing import Optional
 from utils.hash_password import hash_password
+from dateutil.parser import isoparse
 
 
 async def add_url_for_user(
@@ -46,7 +47,7 @@ async def add_url_for_user(
         # Step 3: Generate unique short code based on index
         short_code = generate_short_code(user_id, len(user_urls) + 1)
         expires_at = (
-            datetime.strptime(expires_at, "%Y-%m-%d")
+            isoparse(expires_at)
             if isinstance(expires_at, str)
             else None
         )
