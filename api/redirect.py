@@ -48,14 +48,16 @@ async def handle_redirect(
             },
         )
         if url.expires_at:
-            ttl = int((url.expires_at - datetime.now(timezone.utc)).total_seconds())
+            aware_expires_at = make_aware(url.expires_at)
+            ttl = int((aware_expires_at - datetime.now(timezone.utc)).total_seconds())
             await redis_client.expire(redis_key, ttl)
+        url.expires_at = make_aware(url.expires_at)
     else:
         url = type("URLObj", (), {})()
         url.id = url_data["id"]
         url.destination = url_data["destination"]
         url.expires_at = (
-            datetime.fromisoformat(url_data["expires_at"])
+            make_aware(datetime.fromisoformat(url_data["expires_at"]))
             if url_data.get("expires_at")
             else None
         )
@@ -67,7 +69,7 @@ async def handle_redirect(
         url.is_protected = url_data["is_protected"] == "True"
 
     # Expiry
-    if url.expires_at and url.expires_at <= datetime.now(timezone.utc):
+    if url.expires_at and make_aware(url.expires_at) <= datetime.now(timezone.utc):
         background_tasks.add_task(delete_url_and_clicks, None, str(url.id))
         await redis_client.delete(redis_key)
         raise HTTPException(status_code=410, detail="URL expired.")
@@ -126,3 +128,11 @@ async def deduct_click_limit_and_update_cache(url_id: str, short_code: str):
             await redis_client.hset(
                 f"url:{short_code}", mapping={"click_limit": url.click_limit}
             )
+
+
+def make_aware(dt):
+    if dt is None:
+        return None
+    if dt.tzinfo is None or dt.tzinfo.utcoffset(dt) is None:
+        return dt.replace(tzinfo=timezone.utc)
+    return dt
